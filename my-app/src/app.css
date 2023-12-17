@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #9278ca;
+  --secondary: #58389d;
+  --accent: #e7deff;
+  /* --primary: #ffffff; */
+  /* --secondary: #6ca0e1; */
+  --text: #58389d;
+  --background: #F5F6FF;
+}
+
+/* h1 {
+	font-family: 'Hedvig Letters Serif', serif;
+} */
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
