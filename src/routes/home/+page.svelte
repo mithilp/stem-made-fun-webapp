@@ -1,40 +1,26 @@
 <script lang="ts">
   import { UploadCloud } from "lucide-svelte";
-  import { useCompletion } from 'ai/svelte';
+  import { Completion } from '@ai-sdk/svelte';
   import { enhance } from "$lib/form";
-  import { onMount } from 'svelte';
 
   // import Carousel from '$lib/components/Carousel'
   let videos = ["https://www.youtube.com/embed/videoseries?si=aVW4TrCl_4JdxkKX&amp;list=PLhjLi_XV_ESKQTPXPfTOtNMov4xL5XgGJ", "https://www.youtube.com/embed/videoseries?si=aVW4TrCl_4JdxkKX&amp;list=PLhjLi_XV_ESKQTPXPfTOtNMov4xL5XgGJ"]
-  const {
-    input: promptInput1,
-    handleSubmit: handlePromptSubmit1,
-    completion: promptCompletion1,
-    isLoading: responseIsLoading1
-  } = useCompletion({ api: '/api/questions' });
-  const {
-    input: promptInput2,
-    handleSubmit: handlePromptSubmit2,
-    completion: promptCompletion2,
-    isLoading: responseIsLoading2
-  } = useCompletion({ api: '/api/define' });
-  const {
-    input: promptInput3,
-    handleSubmit: handlePromptSubmit3,
-    completion: promptCompletion3,
-    isLoading: responseIsLoading3
-  } = useCompletion({ api: '/api/examples' });
+  const questions = new Completion({ api: '/api/questions' });
+  const define = new Completion({ api: '/api/define' });
+  const examples = new Completion({ api: '/api/examples' });
 
   //to make it work in an iframe, we have to get rid of everything after view?usp=sharing and replace it with /preview
   let pdfUrl = 'https://drive.google.com/file/d/1HK3NbKxDGYp6VbsQXbz4ftZPgMXDCTr4/preview'
   // let pdfUrl = 'https://ouallinator.com/blog/wp-content/uploads/2017/08/A-Very-Short-Story.pdf';
 
-  let input = "";
-  $: $promptInput1 = input;
-  $: $promptInput2 = input;
-  $: $promptInput3 = input;
+  let input = $state("");
+  $effect(() => {
+    questions.input = input;
+    define.input = input;
+    examples.input = input;
+  });
 
-  let playlist = 1;
+  let playlist = $state(1);
 </script>
 
 <div class="h-screen grid grid-cols-2 grid-rows-1">
@@ -48,7 +34,7 @@
       <!-- {#if stage==1}
       
       <div class="grid grid-cols-2 grid-rows-4 h-[30rem]">
-        <button on:click={()=>{stage=2;}} class="col-span-1 row-span-2 bg-primary m-4 rounded-2xl text-2xl text-white font-bold -rotate-3">
+        <button onclick={()=>{stage=2;}} class="col-span-1 row-span-2 bg-primary m-4 rounded-2xl text-2xl text-white font-bold -rotate-3">
           <div class="m-8 rounded-2xl">Open the StemMadeFun book!</div>
         </button>
         
@@ -111,32 +97,32 @@
         class="h-16 p-2 rounded-xl border-2 mx-auto border-primary w-full text-center text-secondary col-span-3"
         placeholder="Enter your query!" 
         />
-        <button on:click={(e)=>{e.preventDefault; $promptCompletion1=""; $promptCompletion2=""; $promptCompletion3="";  handlePromptSubmit1(e);}} class="bg-primary text-white font-bold font-2xl p-4 mx-auto w-full rounded-xl">Ask</button>
-        <button on:click={(e)=>{e.preventDefault; $promptCompletion1=""; $promptCompletion2=""; $promptCompletion3=""; handlePromptSubmit2(e);}} class="bg-primary text-white font-bold font-2xl p-4 mx-auto w-full rounded-xl">Define</button>
-        <button on:click={(e)=>{e.preventDefault; $promptCompletion1=""; $promptCompletion2=""; $promptCompletion3=""; handlePromptSubmit3(e);}} class="bg-primary text-white font-bold font-2xl p-4 mx-auto w-full rounded-xl">Examples</button>
+        <button onclick={(e)=>{e.preventDefault; questions.completion=""; define.completion=""; examples.completion="";  questions.handleSubmit(e);}} class="bg-primary text-white font-bold font-2xl p-4 mx-auto w-full rounded-xl">Ask</button>
+        <button onclick={(e)=>{e.preventDefault; questions.completion=""; define.completion=""; examples.completion=""; define.handleSubmit(e);}} class="bg-primary text-white font-bold font-2xl p-4 mx-auto w-full rounded-xl">Define</button>
+        <button onclick={(e)=>{e.preventDefault; questions.completion=""; define.completion=""; examples.completion=""; examples.handleSubmit(e);}} class="bg-primary text-white font-bold font-2xl p-4 mx-auto w-full rounded-xl">Examples</button>
       </form>
 
-      {#if $promptCompletion1!==""}
-        {$promptCompletion1}
-      {:else if $promptCompletion2!==""}
-        {$promptCompletion2}
-      {:else if $promptCompletion3!==""}
-        {$promptCompletion3}
+      {#if questions.completion!==""}
+        {questions.completion}
+      {:else if define.completion!==""}
+        {define.completion}
+      {:else if examples.completion!==""}
+        {examples.completion}
       {:else}
-        {$promptCompletion1}
+        {questions.completion}
       {/if}
     </div>
     <div class="grid grid-cols-3">
       <div class="bg-white p-4 col-span-3 text-xl font-bold text-secondary rounded-t-2xl border-4 border-secondary text-center">
         Follow along with StemMadeFun Videos!
       </div>
-      <button on:click={()=>{playlist=1}} class="font-bold text-center bg-white border-secondary border-4 border-t-0 rounded-bl-2xl">
+      <button onclick={()=>{playlist=1}} class="font-bold text-center bg-white border-secondary border-4 border-t-0 rounded-bl-2xl">
         Unit 1
       </button>
-      <button on:click={()=>{playlist=2}} class="font-bold text-center bg-white border-secondary border-b-4">
+      <button onclick={()=>{playlist=2}} class="font-bold text-center bg-white border-secondary border-b-4">
         Unit 2
       </button>
-      <button on:click={()=>{playlist=3}} class="font-bold text-center bg-white border-secondary border-4 border-t-0 rounded-br-2xl">
+      <button onclick={()=>{playlist=3}} class="font-bold text-center bg-white border-secondary border-4 border-t-0 rounded-br-2xl">
         Unit 3
       </button>
 
