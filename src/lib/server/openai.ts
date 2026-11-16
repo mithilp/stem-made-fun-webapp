@@ -1,4 +1,4 @@
-import { OPENAI_API_KEY } from '$env/static/private';
+import { OPENAI_API_KEY } from '$app/env/private';
 import { createOpenAI } from '@ai-sdk/openai';
 
 export const openai = createOpenAI({

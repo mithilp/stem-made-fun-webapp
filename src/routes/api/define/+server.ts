@@ -1,4 +1,4 @@
-import { openai } from '$lib/server/openai';
+import { openai } from '#lib/server/openai';
 import { streamText } from 'ai';
 
 export async function POST({ request }) {

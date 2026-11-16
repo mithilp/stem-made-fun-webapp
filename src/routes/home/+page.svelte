@@ -1,9 +1,9 @@
 <script lang="ts">
   import { UploadCloud } from "lucide-svelte";
   import { Completion } from '@ai-sdk/svelte';
-  import { enhance } from "$lib/form";
+  import { enhance } from "#lib/form";
 
-  // import Carousel from '$lib/components/Carousel'
+  // import Carousel from '#lib/components/Carousel'
   let videos = ["https://www.youtube.com/embed/videoseries?si=aVW4TrCl_4JdxkKX&amp;list=PLhjLi_XV_ESKQTPXPfTOtNMov4xL5XgGJ", "https://www.youtube.com/embed/videoseries?si=aVW4TrCl_4JdxkKX&amp;list=PLhjLi_XV_ESKQTPXPfTOtNMov4xL5XgGJ"]
   const questions = new Completion({ api: '/api/questions' });
   const define = new Completion({ api: '/api/define' });
